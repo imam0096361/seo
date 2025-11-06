@@ -1,0 +1,128 @@
+/* Global Styles for The Daily Star - AI Keyword Strategist */
+/* Clean white theme matching The Daily Star website */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  /* The Daily Star Brand Colors */
+  --ds-red: #DC143C;           /* Daily Star red (primary) */
+  --ds-dark-red: #B01030;      /* Darker red for hover */
+  --ds-navy: #1E3A5F;          /* Navy blue (secondary) */
+  --ds-light-blue: #4A90E2;    /* Light blue for accents */
+  --ds-gold: #FFB81C;          /* Gold for highlights */
+
+  /* Neutral Colors (White theme) */
+  --bg-white: #FFFFFF;
+  --bg-light: #F8F9FA;
+  --bg-gray: #E9ECEF;
+  --border-light: #DEE2E6;
+  --border-medium: #CED4DA;
+
+  /* Text Colors */
+  --text-dark: #212529;
+  --text-medium: #495057;
+  --text-light: #6C757D;
+  --text-muted: #ADB5BD;
+
+  /* Status Colors */
+  --success: #28A745;
+  --warning: #FFC107;
+  --danger: #DC3545;
+  --info: #17A2B8;
+}
+
+body {
+  font-family: 'Georgia', 'Times New Roman', serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: var(--bg-light);
+  color: var(--text-dark);
+}
+
+code {
+  font-family: 'Courier New', Consolas, Monaco, monospace;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom scrollbar (Light theme) */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-gray);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-medium);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+/* Selection color (Daily Star red) */
+::selection {
+  background-color: var(--ds-red);
+  color: white;
+}
+
+/* Focus styles for accessibility */
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--ds-light-blue);
+  outline-offset: 2px;
+}
+
+/* Tailwind custom utilities */
+@layer utilities {
+  .bg-ds-white { background-color: var(--bg-white); }
+  .bg-ds-light { background-color: var(--bg-light); }
+  .bg-ds-gray { background-color: var(--bg-gray); }
+  .bg-ds-red { background-color: var(--ds-red); }
+  .bg-ds-navy { background-color: var(--ds-navy); }
+  .bg-ds-gold { background-color: var(--ds-gold); }
+
+  .text-ds-dark { color: var(--text-dark); }
+  .text-ds-medium { color: var(--text-medium); }
+  .text-ds-light { color: var(--text-light); }
+  .text-ds-muted { color: var(--text-muted); }
+  .text-ds-red { color: var(--ds-red); }
+  .text-ds-navy { color: var(--ds-navy); }
+
+  .border-ds-light { border-color: var(--border-light); }
+  .border-ds-medium { border-color: var(--border-medium); }
+  .border-ds-red { border-color: var(--ds-red); }
+  .border-ds-navy { border-color: var(--ds-navy); }
+  .border-ds-border-light { border-color: var(--border-light); }
+  .border-ds-border-medium { border-color: var(--border-medium); }
+
+  .hover\:bg-ds-dark-red:hover { background-color: var(--ds-dark-red); }
+  .hover\:bg-ds-navy:hover { background-color: var(--ds-navy); }
+  .hover\:bg-ds-navy\/80:hover { background-color: rgba(30, 58, 95, 0.8); }
+  .hover\:border-ds-navy:hover { border-color: var(--ds-navy); }
+
+  /* Newspaper-style shadows */
+  .shadow-ds {
+    box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+  }
+  .shadow-ds-md {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  }
+  .shadow-ds-lg {
+    box-shadow: 0 8px 16px rgba(0,0,0,0.12);
+  }
+}
+
+

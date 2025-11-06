@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>The Daily Star: AI Keyword Strategist</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              // The Daily Star Brand Colors
+              'ds-red': '#DC143C',
+              'ds-dark-red': '#B01030',
+              'ds-navy': '#1E3A5F',
+              'ds-light-blue': '#4A90E2',
+              'ds-gold': '#FFB81C',
+
+              // Neutral Colors (White theme)
+              'ds-white': '#FFFFFF',
+              'ds-light': '#F8F9FA',
+              'ds-gray': '#E9ECEF',
+
+              // Text Colors
+              'ds-dark': '#212529',
+              'ds-medium': '#495057',
+              'ds-muted': '#ADB5BD',
+
+              // Border Colors
+              'ds-border-light': '#DEE2E6',
+              'ds-border-medium': '#CED4DA',
+            }
+          }
+        }
+      }
+    </script>
+  <script type="importmap">
+{
+  "imports": {
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.27.0",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>
