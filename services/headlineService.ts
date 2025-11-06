@@ -71,21 +71,91 @@ export const generateHeadlineSuggestions = async (
 
   const keywordTerms = primaryKeywords.map(k => k.term).join(', ');
 
+  // Determine if this is Bangla content
+  const isBangla = detectedLanguage === 'bangla' || detectedLanguage === 'mixed';
+  const banglaCharRegex = /[\u0980-\u09FF]/;
+  const hasBanglaChars = banglaCharRegex.test(currentHeadline) || banglaCharRegex.test(articleContent);
+  const shouldGenerateBangla = isBangla || hasBanglaChars;
+
+  console.log('📰 Headline Generation Config:', {
+    detectedLanguage,
+    hasBanglaChars,
+    shouldGenerateBangla,
+    currentHeadline: currentHeadline.substring(0, 50) + '...',
+  });
+
+  // Build language-specific prompt
+  const languageInstruction = shouldGenerateBangla
+    ? `**CRITICAL: THIS IS A BANGLA (বাংলা) ARTICLE**
+- Generate ALL headlines in BENGALI/BANGLA script (বাংলা ভাষা)
+- Use proper Bangla grammar, syntax, and news headline style
+- Follow The Daily Star Bangla section editorial guidelines
+- Do NOT transliterate - write in actual Bengali script
+- Ensure natural, fluent Bangla that sounds native
+- Use appropriate Bangla news terminology`
+    : `**Language: English**
+- Generate all headlines in English
+- Follow The Daily Star English edition style`;
+
   const prompt = `You are The Daily Star Bangladesh's senior headline editor with 15+ years experience.
 
 **Your Mission:** Generate 8-10 headline variants for this article that match The Daily Star's exact editorial style.
 
+${languageInstruction}
+
 **Current Headline:** ${currentHeadline}
 
-**Article Content (first 500 chars):**
-${articleContent.substring(0, 500)}
+**Article Content (first 800 chars):**
+${articleContent.substring(0, 800)}
 
 **Primary SEO Keywords:** ${keywordTerms}
+
+**Detected Language:** ${detectedLanguage}
 
 **THE DAILY STAR HEADLINE STYLE RULES:**
 
 **Observed Patterns from thedailystar.net:**
 
+${shouldGenerateBangla ? `
+**FOR BANGLA (বাংলা) HEADLINES:**
+
+1. **STATEMENT Style** (সাধারণ বিবৃতি):
+   - সরাসরি, ঘোষণামূলক গঠন
+   - Example: "পাঁচ ব্যাংকের শেয়ার লেনদেন স্থগিত, একীভূতকরণ প্রক্রিয়া শুরু"
+   - Format: [কর্ম] + [বিষয়] + [প্রসঙ্গ/কারণ]
+
+2. **QUOTE/ATTRIBUTION Style** (উদ্ধৃতি):
+   - কোলন দিয়ে বক্তব্য এবং সূত্র আলাদা করুন
+   - Example: "নির্বাচনের দিনেই গণভোট হতে হবে: ফখরুল"
+   - Format: "[মূল বক্তব্য]: [সূত্রের নাম]"
+
+3. **NUMBER/DATA Style** (সংখ্যা/তথ্য):
+   - নির্দিষ্ট সংখ্যা বা পরিসংখ্যান দিয়ে শুরু
+   - Example: "কাস্টমস ৬.৫ করোড় টাকার নিষিদ্ধ পোস্ত বীজ জব্দ"
+   - Format: [সংস্থা] + [কর্ম] + [নির্দিষ্ট পরিমাণ] + [প্রসঙ্গ]
+
+4. **LOCATION + EVENT Style** (স্থান ও ঘটনা):
+   - স্থানীয় সংবাদের জন্য ভৌগোলিক ফোকাস
+   - Example: "ঢাকায় যানজট বৃদ্ধি, জনভোগান্তি চরমে"
+   - Format: [কে] + [কর্ম] + [কী] + [কোথায়/কেন]
+
+5. **URGENT/BREAKING Style** (জরুরি):
+   - সংক্ষিপ্ত, তাৎক্ষণিক, কর্ম-কেন্দ্রিক
+   - Example: "জাতীয় পার্টি মনোনয়নপত্র বিক্রয় শুরু"
+   - Format: [সংগঠন] + [কর্ম] + [বিষয়]
+
+6. **QUESTION Style** (প্রশ্ন - বিরল):
+   - সংযতভাবে ব্যবহার করুন
+   - Example: "সুদের হার কমলে কি মূল্যস্ফীতি কমবে?"
+
+**BANGLA HEADLINE REQUIREMENTS:**
+- Must be in proper Bengali script (বাংলা)
+- Use native Bangla news terminology
+- Follow সংবাদপত্র শিরোনাম conventions
+- Natural flow - avoid word-by-word translation
+- Appropriate verb forms and postpositions
+- Cultural context awareness
+` : `
 1. **STATEMENT Style** (Most Common):
    - Direct, declarative structure
    - Example: "Trading of five banks' shares suspended as merger process begins"
@@ -115,9 +185,21 @@ ${articleContent.substring(0, 500)}
    - Use sparingly, only when truly appropriate
    - Must be answerable by article
    - Example: "Will interest rate cut reduce inflation in Bangladesh?"
+`}
 
 **MANDATORY STYLE REQUIREMENTS:**
 
+${shouldGenerateBangla ? `
+✅ Length: 50-120 characters (Bangla chars counted, ideal: 80)
+✅ Language: 100% Bengali script - NO English words unless proper nouns
+✅ Tone: তথ্যভিত্তিক, সাংবাদিক, কর্তৃত্বপূর্ণ (Factual, journalistic, authoritative)
+✅ Voice: সক্রিয় কণ্ঠস্বর (Active voice)
+✅ Tense: বর্তমান কাল for immediacy
+✅ Natural Bangla: Must sound like native Bangla news headlines
+✅ Numbers: Use Bengali numerals (০১২৩৪৫৬৭৮৯) or English (0-9) based on Daily Star Bangla convention
+✅ Keywords: Naturally incorporate Bangla keywords
+✅ No clickbait: Avoid সাংবাদিক নৈতিকতা লঙ্ঘন
+` : `
 ✅ Length: 50-80 characters (ideal: 65)
 ✅ Tone: Factual, journalistic, authoritative
 ✅ Voice: Active voice only
@@ -127,6 +209,7 @@ ${articleContent.substring(0, 500)}
 ✅ Specifics: Include numbers, names, locations when available
 ✅ Keywords: Incorporate primary keyword naturally
 ✅ No clickbait: Avoid "You won't believe," "Shocking," etc.
+`}
 
 **SCORING CRITERIA:**
 
@@ -148,6 +231,18 @@ ${articleContent.substring(0, 500)}
 - 1-2 Location + Event style
 - 1 Urgent/Breaking style
 - 1 Question style (optional)
+
+${shouldGenerateBangla ? `
+**🚨 CRITICAL FOR BANGLA CONTENT:**
+- ALL headline text MUST be in Bengali script (বাংলা)
+- Read the article content carefully to understand context
+- Generate headlines that a native Bangla speaker would write
+- Do NOT write English headlines
+- Do NOT transliterate (e.g., "Bangladesh Bank" should be "বাংলাদেশ ব্যাংক")
+- Proper nouns in English are acceptable only if commonly used (e.g., "ডিএমপি", "র‍্যাব")
+- Example GOOD Bangla headline: "বাংলাদেশ ব্যাংকের নতুন সুদহার ঘোষণা"
+- Example BAD headline: "Bangladesh Bank announces new interest rate"
+` : ''}
 
 **Output JSON Format:**
 
@@ -186,11 +281,14 @@ ${articleContent.substring(0, 500)}
 Respond with ONLY the JSON object. No markdown, no wrapper text.`;
 
   try {
+    // Use more capable model for Bangla content
+    const model = shouldGenerateBangla ? 'gemini-2.5-pro-latest' : 'gemini-2.0-flash-exp';
+
     const response = await ai.models.generateContent({
-      model: 'gemini-2.0-flash-exp',
+      model: model,
       contents: prompt,
       config: {
-        temperature: 0.7, // Higher for creative variants
+        temperature: shouldGenerateBangla ? 0.5 : 0.7, // Lower temp for Bangla accuracy
         topP: 0.9,
         maxOutputTokens: 4096,
         responseMimeType: 'application/json',
