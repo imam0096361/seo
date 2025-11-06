@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useRef } from 'react';
 import { generateKeywords } from './services/geminiService';
+import { generateCompleteSEO } from './services/completeSEOService';
 import { generateKeywordsWithOpenAI } from './services/openaiService';
 import {
   getDataForSEOConfig,
@@ -7,7 +8,7 @@ import {
   clearDataForSEOConfig,
   testDataForSEOConnection
 } from './services/dataForSeoService';
-import type { KeywordResult } from './types';
+import type { KeywordResult, CompleteSEOResult } from './types';
 import { KeywordCard } from './components/KeywordCard';
 import Loader from './components/Loader';
 import { SparklesIcon } from './components/icons';
@@ -17,7 +18,7 @@ const App: React.FC = () => {
   const [articleUrl, setArticleUrl] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [result, setResult] = useState<KeywordResult | null>(null);
+  const [result, setResult] = useState<CompleteSEOResult | null>(null);
   const [useDeepAnalysis, setUseDeepAnalysis] = useState(false);
   
   // AI Provider selection: 'gemini' or 'openai'
@@ -188,17 +189,17 @@ const App: React.FC = () => {
       // --- End of Fetching Logic ---
 
       // --- Start of Generation Logic ---
-      let generatedResult: KeywordResult;
-      
+      let generatedResult: CompleteSEOResult;
+
       if (aiProvider === 'openai') {
         if (!openaiApiKey || openaiApiKey.trim() === '') {
           throw new Error('OpenAI API key is required. Please enter your API key in the settings.');
         }
-        generatedResult = await generateKeywordsWithOpenAI(fetchedContent, useDeepAnalysis, openaiApiKey);
+        generatedResult = await generateKeywordsWithOpenAI(fetchedContent, useDeepAnalysis, openaiApiKey) as any;
       } else {
-        generatedResult = await generateKeywords(fetchedContent, useDeepAnalysis);
+        generatedResult = await generateCompleteSEO(fetchedContent, useDeepAnalysis);
       }
-      
+
       setResult(generatedResult);
       // --- End of Generation Logic ---
 
@@ -241,17 +242,17 @@ const App: React.FC = () => {
     setResult(null);
 
     try {
-      let generatedResult: KeywordResult;
-      
+      let generatedResult: CompleteSEOResult;
+
       if (aiProvider === 'openai') {
         if (!openaiApiKey || openaiApiKey.trim() === '') {
           throw new Error('OpenAI API key is required. Please enter your API key in the settings.');
         }
-        generatedResult = await generateKeywordsWithOpenAI(articleContent, useDeepAnalysis, openaiApiKey);
+        generatedResult = await generateKeywordsWithOpenAI(articleContent, useDeepAnalysis, openaiApiKey) as any;
       } else {
-        generatedResult = await generateKeywords(articleContent, useDeepAnalysis);
+        generatedResult = await generateCompleteSEO(articleContent, useDeepAnalysis);
       }
-      
+
       setResult(generatedResult);
     } catch (err) {
       console.error("Error generating keywords:", err);
