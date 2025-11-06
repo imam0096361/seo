@@ -9,7 +9,6 @@
 
 An AI-powered tool for **The Daily Star** (English + Bangla editions) that analyzes news article drafts to generate primary, secondary, and long-tail keywords optimized for ranking #1 on Google. Features competitive analysis based on the Bangladesh news media landscape with **BILINGUAL support** for both English and Bengali content.
 
-View your app in AI Studio: https://ai.studio/apps/drive/1qm1paoS3d2Jvq_A1O_6P92RBRliXKEtT
 
 ## 🚀 Run Locally
 
